@@ -1,4 +1,4 @@
-# [WIP] MicroPython MPU9250 I2C driver
+# [WIP] MicroPython MPU9250 (MPU6050 + AK8963) I2C driver
 
 ## Usage
 
