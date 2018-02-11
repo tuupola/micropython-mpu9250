@@ -24,6 +24,15 @@ _HYL = const(0x05)
 _HYH = const(0x06)
 _HZL = const(0x07)
 _HZH = const(0x08)
+_CNTL1 = const(0x0a)
+
+_MODE_POWER_DOWN = 0x00
+_MODE_SINGLE_MEASURE = 0x01
+_MODE_CONTINOUS_MEASURE_1 = 0x02
+_MODE_CONTINOUS_MEASURE_2 = 0x06
+_MODE_EXTERNAL_TRIGGER_MEASURE_1 = 0x04
+_MODE_SELF_TEST = 0x08
+_MODE_FUSE_ROM_ACCESS = 0x0f
 
 class AK8963:
     """Class which provides interface to AK8963 magnetometer."""
@@ -34,12 +43,20 @@ class AK8963:
         if 0x48 != self.whoami:
             raise RuntimeError("AK8963 not found in I2C bus.")
 
+        self._register_char(_CNTL1, _MODE_CONTINOUS_MEASURE_2)
+
     @property
     def orientation(self):
         """
         x, y, z degrees as floats
         """
-        return (0.0, 0.0, 0.0)
+        # so = self._accel_so
+        # sf = self._accel_sf
+
+        x = self._register_word(_HXL) #/ so * sf
+        y = self._register_word(_HYL) #/ so * sf
+        z = self._register_word(_HZL) #/ so * sf
+        return (x, y, z)
 
     @property
     def whoami(self):
