@@ -65,7 +65,7 @@ _I2C_BYPASS_EN = const(0b00000010)
 _I2C_BYPASS_DIS = const(0b00000000)
 
 SF_G = 1
-SF_SI = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
+SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
 SF_RAD_S = 57.295779578552 # 1 rad/s is 57.295779578552 deg/s
 
@@ -74,7 +74,7 @@ class MPU6050:
     def __init__(
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
-        accel_sf=SF_SI, gyro_sf=SF_RAD_S
+        accel_sf=SF_M_S2, gyro_sf=SF_RAD_S
     ):
         self.i2c = i2c
         self.address = address
@@ -98,7 +98,8 @@ class MPU6050:
         """
         Acceleration measured by the sensor. By default will return a
         3-tuple of X, Y, Z axis acceleration values in m/s^2 as floats. Will
-        return values in g if constructor was provided `sf=SF_G` parameter.
+        return values in g if constructor was provided `accel_sf=SF_M_S2`
+        parameter.
         """
         so = self._accel_so
         sf = self._accel_sf

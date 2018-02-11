@@ -16,11 +16,11 @@ MicroPython I2C driver for MPU9250 9-axis motion tracking device
 import ustruct # pylint: disable=import-error
 from machine import I2C, Pin # pylint: disable=import-error
 from micropython import const # pylint: disable=import-error
-from mpu6050 import MPU6050, SF_SI, ACCEL_FS_SEL_2G, GYRO_FS_SEL_250DPS
+from mpu6050 import MPU6050, ACCEL_FS_SEL_2G, GYRO_FS_SEL_250DPS
 from ak8963 import AK8963
 
 SF_G = 1
-SF_SI = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
+SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
 SF_RAD_S = 57.295779578552 # 1 rad/s is 57.295779578552 deg/s
 
@@ -28,7 +28,7 @@ class MPU9250:
     """Class which provides interface to MPU9250 9-axis motion tracking device."""
     def __init__(
         self, i2c, address=0x68,
-        accel_fs=ACCEL_FS_SEL_2G, accel_sf=SF_SI,
+        accel_fs=ACCEL_FS_SEL_2G, accel_sf=SF_M_S2,
         gyro_fs=GYRO_FS_SEL_250DPS, gyro_sf=SF_RAD_S
     ):
         self.mpu6050 = MPU6050(
