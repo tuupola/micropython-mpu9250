@@ -28,12 +28,12 @@ class MPU9250:
     """Class which provides interface to MPU9250 9-axis motion tracking device."""
     def __init__(
         self, i2c, address=0x68,
-        accel_fs=ACCEL_FS_SEL_2G, sf=SF_SI,
+        accel_fs=ACCEL_FS_SEL_2G, accel_sf=SF_SI,
         gyro_fs=GYRO_FS_SEL_250DPS, gyro_sf=SF_RAD_S
     ):
         self.mpu6050 = MPU6050(
             i2c, address=0x68,
-            accel_fs=accel_fs, sf=sf,
+            accel_fs=accel_fs, accel_sf=accel_sf,
             gyro_fs=gyro_fs, gyro_sf=gyro_sf
         )
         self.ak8963 = AK8963(i2c)

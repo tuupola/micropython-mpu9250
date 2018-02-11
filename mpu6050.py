@@ -74,7 +74,7 @@ class MPU6050:
     def __init__(
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
-        sf=SF_SI, gyro_sf=SF_RAD_S
+        accel_sf=SF_SI, gyro_sf=SF_RAD_S
     ):
         self.i2c = i2c
         self.address = address
@@ -84,7 +84,7 @@ class MPU6050:
 
         self._accel_fs(accel_fs)
         self._gyro_so = self._gyro_fs(gyro_fs)
-        self._sf = sf
+        self._accel_sf = accel_sf
         self._gyro_sf = gyro_sf
 
         # Enable I2C bypass to access for MPU9250 magnetometer access.
@@ -101,7 +101,7 @@ class MPU6050:
         return values in g if constructor was provided `sf=SF_G` parameter.
         """
         so = self._accel_so
-        sf = self._sf
+        sf = self._accel_sf
 
         x = self._register_word(_ACCEL_XOUT_H) / so * sf
         y = self._register_word(_ACCEL_YOUT_H) / so * sf
