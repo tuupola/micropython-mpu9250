@@ -54,6 +54,11 @@ GYRO_FS_SEL_500DPS = const(0b00001000)
 GYRO_FS_SEL_1000DPS = const(0b00010000)
 GYRO_FS_SEL_2000DPS = const(0b00011000)
 
+_GYRO_SO_250DPS = 131
+_GYRO_SO_500DPS = 62.5
+_GYRO_SO_1000DPS = 32.8
+_GYRO_SO_2000DPS = 16.4
+
 # Used for enablind and disabling the i2c bypass access
 _I2C_BYPASS_MASK = const(0b00000010)
 _I2C_BYPASS_EN = const(0b00000010)
@@ -61,13 +66,15 @@ _I2C_BYPASS_DIS = const(0b00000000)
 
 SF_G = 1
 SF_SI = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
+SF_DEG_S = 1
+SF_RAD_S = 57.295779578552 # 1 rad/s is 57.295779578552 deg/s
 
 class MPU6050:
     """Class which provides interface to MPU6050 6-axis motion tracking device."""
     def __init__(
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
-        sf=SF_SI
+        sf=SF_SI, gyro_sf=SF_RAD_S
     ):
         self.i2c = i2c
         self.address = address
@@ -76,7 +83,9 @@ class MPU6050:
             raise RuntimeError("MPU6x50 not found in I2C bus.")
 
         self._accel_fs(accel_fs)
+        self._gyro_so = self._gyro_fs(gyro_fs)
         self._sf = sf
+        self._gyro_sf = gyro_sf
 
         # Enable I2C bypass to access for MPU9250 magnetometer access.
         char = self._register_char(_INT_PIN_CFG)
@@ -102,9 +111,15 @@ class MPU6050:
     @property
     def gyro(self):
         """
-        x, y, z radians per second as floats
+        X, Y, Z radians per second as floats.
         """
-        return (0.0, 0.0, 0.0)
+        so = self._gyro_so
+        sf = self._gyro_sf
+
+        x = self._register_word(_GYRO_XOUT_H) / so * sf
+        y = self._register_word(_GYRO_YOUT_H) / so * sf
+        z = self._register_word(_GYRO_ZOUT_H) / so * sf
+        return (x, y, z)
 
     @property
     def whoami(self):
@@ -136,3 +151,18 @@ class MPU6050:
             self._accel_so = _ACCEL_SO_8G
         elif ACCEL_FS_SEL_16G == value:
             self._accel_so = _ACCEL_SO_16G
+
+    def _gyro_fs(self, value):
+        self._register_char(_GYRO_CONFIG, value)
+
+        # Return the sensitivity divider
+        if GYRO_FS_SEL_250DPS == value:
+            return _GYRO_SO_250DPS
+        elif GYRO_FS_SEL_500DPS == value:
+            return _GYRO_SO_500DPS
+        elif GYRO_FS_SEL_1000DPS == value:
+            return _GYRO_SO_1000DPS
+        elif GYRO_FS_SEL_2000DPS == value:
+            return _GYRO_SO_2000DPS
+
+
