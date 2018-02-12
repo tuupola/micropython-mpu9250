@@ -10,7 +10,7 @@
 #
 
 """
-MicroPython I2C driver for MPU6050 6-axis motion tracking device
+MicroPython I2C driver for MPU6500 6-axis motion tracking device
 """
 
 __version__ = "0.1.0-dev"
@@ -71,8 +71,8 @@ SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
 SF_RAD_S = 57.295779578552 # 1 rad/s is 57.295779578552 deg/s
 
-class MPU6050:
-    """Class which provides interface to MPU6050 6-axis motion tracking device."""
+class MPU6500:
+    """Class which provides interface to MPU6500 6-axis motion tracking device."""
     def __init__(
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
@@ -82,7 +82,7 @@ class MPU6050:
         self.address = address
 
         if 0x71 != self.whoami:
-            raise RuntimeError("MPU6x50 not found in I2C bus.")
+            raise RuntimeError("MPU6500 not found in I2C bus.")
 
         self._accel_so = self._accel_fs(accel_fs)
         self._gyro_so = self._gyro_fs(gyro_fs)

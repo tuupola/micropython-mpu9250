@@ -15,7 +15,7 @@ MicroPython I2C driver for MPU9250 9-axis motion tracking device
 
 # pylint: disable=import-error
 from micropython import const
-from mpu6050 import MPU6050
+from mpu6500 import MPU6500
 from ak8963 import AK8963
 # pylint: enable=import-error
 
@@ -23,11 +23,11 @@ __version__ = "0.1.0-dev"
 
 class MPU9250:
     """Class which provides interface to MPU9250 9-axis motion tracking device."""
-    def __init__(self, i2c, mpu6050 = None, ak8963 = None):
-        if mpu6050 is None:
-            self.mpu6050 = MPU6050(i2c)
+    def __init__(self, i2c, mpu6500 = None, ak8963 = None):
+        if mpu6500 is None:
+            self.mpu6500 = MPU6500(i2c)
         else:
-            self.mpu6050 = mpu6050
+            self.mpu6500 = mpu6500
 
         if ak8963 is None:
             self.ak8963 = AK8963(i2c)
@@ -41,7 +41,7 @@ class MPU9250:
         3-tuple of X, Y, Z axis values in m/s^2 as floats. To get values in g
         pass `accel_fs=SF_G` parameter to the constructor.
         """
-        return self.mpu6050.acceleration
+        return self.mpu6500.acceleration
 
     @property
     def gyro(self):
@@ -50,7 +50,7 @@ class MPU9250:
         X, Y, Z axis values in rad/s as floats. To get values in deg/s pass
         `gyro_sf=SF_DEG_S` parameter to the constructor.
         """
-        return self.mpu6050.gyro
+        return self.mpu6500.gyro
 
     @property
     def magnetic(self):
@@ -61,7 +61,7 @@ class MPU9250:
 
     @property
     def whoami(self):
-        return self.mpu6050.whoami
+        return self.mpu6500.whoami
 
     def __enter__(self):
         return self
