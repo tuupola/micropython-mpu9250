@@ -13,32 +13,26 @@
 MicroPython I2C driver for MPU9250 9-axis motion tracking device
 """
 
-import ustruct # pylint: disable=import-error
-from machine import I2C, Pin # pylint: disable=import-error
-from micropython import const # pylint: disable=import-error
-from mpu6050 import MPU6050, ACCEL_FS_SEL_2G, GYRO_FS_SEL_250DPS
+# pylint: disable=import-error
+from micropython import const
+from mpu6050 import MPU6050
 from ak8963 import AK8963
+# pylint: enable=import-error
 
 __version__ = "0.1.0-dev"
 
-SF_G = 1
-SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
-SF_DEG_S = 1
-SF_RAD_S = 57.295779578552 # 1 rad/s is 57.295779578552 deg/s
-
 class MPU9250:
     """Class which provides interface to MPU9250 9-axis motion tracking device."""
-    def __init__(
-        self, i2c, address=0x68,
-        accel_fs=ACCEL_FS_SEL_2G, accel_sf=SF_M_S2,
-        gyro_fs=GYRO_FS_SEL_250DPS, gyro_sf=SF_RAD_S
-    ):
-        self.mpu6050 = MPU6050(
-            i2c, address=0x68,
-            accel_fs=accel_fs, accel_sf=accel_sf,
-            gyro_fs=gyro_fs, gyro_sf=gyro_sf
-        )
-        self.ak8963 = AK8963(i2c)
+    def __init__(self, i2c, mpu6050 = None, ak8963 = None):
+        if mpu6050 is None:
+            self.mpu6050 = MPU6050(i2c)
+        else:
+            self.mpu6050 = mpu6050
+
+        if ak8963 is None:
+            self.ak8963 = AK8963(i2c)
+        else:
+            self.ak8963 = ak8963
 
     @property
     def acceleration(self):
