@@ -82,7 +82,7 @@ class MPU6050:
         if 0x71 != self.whoami:
             raise RuntimeError("MPU6x50 not found in I2C bus.")
 
-        self._accel_fs(accel_fs)
+        self._accel_so = self._accel_fs(accel_fs)
         self._gyro_so = self._gyro_fs(gyro_fs)
         self._accel_sf = accel_sf
         self._gyro_sf = gyro_sf
@@ -143,15 +143,15 @@ class MPU6050:
     def _accel_fs(self, value):
         self._register_char(_ACCEL_CONFIG, value)
 
-        # Store the sensitivity divider
+        # Return the sensitivity divider
         if ACCEL_FS_SEL_2G == value:
-            self._accel_so = _ACCEL_SO_2G
+            return _ACCEL_SO_2G
         elif ACCEL_FS_SEL_4G == value:
-            self._accel__so = _ACCEL_SO_4G
+            return _ACCEL_SO_4G
         elif ACCEL_FS_SEL_8G == value:
-            self._accel_so = _ACCEL_SO_8G
+            return _ACCEL_SO_8G
         elif ACCEL_FS_SEL_16G == value:
-            self._accel_so = _ACCEL_SO_16G
+            return _ACCEL_SO_16G
 
     def _gyro_fs(self, value):
         self._register_char(_GYRO_CONFIG, value)
