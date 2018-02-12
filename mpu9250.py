@@ -43,7 +43,7 @@ class MPU9250:
         """
         Acceleration measured by the sensor. By default will return a
         3-tuple of X, Y, Z axis values in m/s^2 as floats. To get values in g
-        pass `sf=SF_G` parameter to the constructor.
+        pass `accel_fs=SF_G` parameter to the constructor.
         """
         return self.mpu6050.acceleration
 
