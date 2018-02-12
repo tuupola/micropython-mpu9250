@@ -26,41 +26,53 @@ _HYL = const(0x05)
 _HYH = const(0x06)
 _HZL = const(0x07)
 _HZH = const(0x08)
+_ST2 = const(0x09)
 _CNTL1 = const(0x0a)
 
-_MODE_POWER_DOWN = 0x00
-_MODE_SINGLE_MEASURE = 0x01
-_MODE_CONTINOUS_MEASURE_1 = 0x02
-_MODE_CONTINOUS_MEASURE_2 = 0x06
-_MODE_EXTERNAL_TRIGGER_MEASURE_1 = 0x04
-_MODE_SELF_TEST = 0x08
-_MODE_FUSE_ROM_ACCESS = 0x0f
+MODE_POWER_DOWN = 0b00000000
+MODE_SINGLE_MEASURE = 0b00000001
+MODE_CONTINOUS_MEASURE_1 = 0b00000010 # 8Hz
+MODE_CONTINOUS_MEASURE_2 = 0b00000110 # 100Hz
+MODE_EXTERNAL_TRIGGER_MEASURE = 0b00000100
+MODE_SELF_TEST = 0b00001000
+MODE_FUSE_ROM_ACCESS = 0b00001111
+
+OUTPUT_14_BIT = 0b00000000
+OUTPUT_16_BIT = 0b00010000
 
 _SO_14BIT = 0.6 # μT per digit when 14bit mode
-_SO_16BIT = 0.15 # μT/LSB typ.16- bit)
+_SO_16BIT = 0.15 # μT per digit when 16bit mode
 
 class AK8963:
     """Class which provides interface to AK8963 magnetometer."""
-    def __init__(self, i2c, address=0x0c):
+    def __init__(
+        self, i2c, address=0x0c,
+        mode=MODE_CONTINOUS_MEASURE_1, output=OUTPUT_16_BIT
+    ):
         self.i2c = i2c
         self.address = address
 
         if 0x48 != self.whoami:
             raise RuntimeError("AK8963 not found in I2C bus.")
 
-        self._register_char(_CNTL1, _MODE_CONTINOUS_MEASURE_2)
+        self._register_char(_CNTL1, (mode | output))
+
+        if output is OUTPUT_16_BIT:
+            self._so = _SO_16BIT
+        else:
+            self._so = _SO_14BIT
 
     @property
     def magnetic(self):
         """
         X, Y, Z axis micro-Tesla (uT) as floats.
         """
-        # so = self._accel_so
-        # sf = self._accel_sf
+        so = self._so
 
-        x = self._register_word(_HXL) #/ so * sf
-        y = self._register_word(_HYL) #/ so * sf
-        z = self._register_word(_HZL) #/ so * sf
+        x = self._register_word(_HXL) * so
+        y = self._register_word(_HYL) * so
+        z = self._register_word(_HZL) * so
+        self._register_char(_ST2) # Enable updating readings
         return (x, y, z)
 
     @property
