@@ -10,7 +10,7 @@
 #
 
 """
-MicroPython I2C driver for MPU9250 9-axis motion tracking device
+MicroPython I2C driver for MPU6050 6-axis motion tracking device
 """
 
 import ustruct # pylint: disable=import-error
