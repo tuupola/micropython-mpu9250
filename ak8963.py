@@ -34,6 +34,9 @@ _MODE_EXTERNAL_TRIGGER_MEASURE_1 = 0x04
 _MODE_SELF_TEST = 0x08
 _MODE_FUSE_ROM_ACCESS = 0x0f
 
+_SO_14BIT = 0.6 # μT per digit when 14bit mode
+_SO_16BIT = 0.15 # μT/LSB typ.16- bit)
+
 class AK8963:
     """Class which provides interface to AK8963 magnetometer."""
     def __init__(self, i2c, address=0x0c):
@@ -46,9 +49,9 @@ class AK8963:
         self._register_char(_CNTL1, _MODE_CONTINOUS_MEASURE_2)
 
     @property
-    def orientation(self):
+    def magnetic(self):
         """
-        x, y, z degrees as floats
+        X, Y, Z axis micro-Tesla (uT) as floats.
         """
         # so = self._accel_so
         # sf = self._accel_sf

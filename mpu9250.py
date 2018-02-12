@@ -57,11 +57,11 @@ class MPU9250:
         return self.mpu6050.gyro
 
     @property
-    def orientation(self):
+    def magnetic(self):
         """
-        X, Y, Z axis degrees as floats.
+        X, Y, Z axis micro-Tesla (uT) as floats.
         """
-        return self.ak8963.orientation
+        return self.ak8963.magnetic
 
     @property
     def whoami(self):
