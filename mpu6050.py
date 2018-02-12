@@ -13,6 +13,8 @@
 MicroPython I2C driver for MPU6050 6-axis motion tracking device
 """
 
+__version__ = "0.1.0-dev"
+
 import ustruct # pylint: disable=import-error
 from machine import I2C, Pin # pylint: disable=import-error
 from micropython import const # pylint: disable=import-error
@@ -166,4 +168,8 @@ class MPU6050:
         elif GYRO_FS_SEL_2000DPS == value:
             return _GYRO_SO_2000DPS
 
+    def __enter__(self):
+        return self
 
+    def __exit__(self, exception_type, exception_value, traceback):
+        pass

@@ -19,6 +19,8 @@ from micropython import const # pylint: disable=import-error
 from mpu6050 import MPU6050, ACCEL_FS_SEL_2G, GYRO_FS_SEL_250DPS
 from ak8963 import AK8963
 
+__version__ = "0.1.0-dev"
+
 SF_G = 1
 SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
@@ -66,3 +68,9 @@ class MPU9250:
     @property
     def whoami(self):
         return self.mpu6050.whoami
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        pass
