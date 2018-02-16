@@ -39,7 +39,7 @@ class MPU9250:
         """
         Acceleration measured by the sensor. By default will return a
         3-tuple of X, Y, Z axis values in m/s^2 as floats. To get values in g
-        pass `accel_fs=SF_G` parameter to the constructor.
+        pass `accel_fs=SF_G` parameter to the MPU6500 constructor.
         """
         return self.mpu6500.acceleration
 
@@ -48,7 +48,7 @@ class MPU9250:
         """
         Gyro measured by the sensor. By default will return a 3-tuple of
         X, Y, Z axis values in rad/s as floats. To get values in deg/s pass
-        `gyro_sf=SF_DEG_S` parameter to the constructor.
+        `gyro_sf=SF_DEG_S` parameter to the MPU6500 constructor.
         """
         return self.mpu6500.gyro
 
