@@ -15,9 +15,11 @@ MicroPython I2C driver for MPU6500 6-axis motion tracking device
 
 __version__ = "0.1.0-dev"
 
-import ustruct # pylint: disable=import-error
-from machine import I2C, Pin # pylint: disable=import-error
-from micropython import const # pylint: disable=import-error
+# pylint: disable=import-error
+import ustruct
+from machine import I2C, Pin
+from micropython import const
+# pylint: enable=import-error
 
 _GYRO_CONFIG = const(0x1b)
 _ACCEL_CONFIG = const(0x1c)
@@ -91,7 +93,7 @@ class MPU6500:
 
         # Enable I2C bypass to access for MPU9250 magnetometer access.
         char = self._register_char(_INT_PIN_CFG)
-        char &= ~_I2C_BYPASS_MASK # clear ODR bits
+        char &= ~_I2C_BYPASS_MASK # clear I2C bits
         char |= _I2C_BYPASS_EN
         self._register_char(_INT_PIN_CFG, char)
 
