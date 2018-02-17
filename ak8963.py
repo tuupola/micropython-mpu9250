@@ -5,8 +5,9 @@
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
 #
-# Project home:
+# See:
 #   https://github.com/tuupola/micropython-mpu9250
+#   https://www.akm.com/akm/en/file/datasheet/AK8963C.pdf
 #
 
 """
@@ -30,14 +31,17 @@ _HZL = const(0x07)
 _HZH = const(0x08)
 _ST2 = const(0x09)
 _CNTL1 = const(0x0a)
+_ASAX = const(0x10)
+_ASAY = const(0x11)
+_ASAZ = const(0x12)
 
-MODE_POWER_DOWN = 0b00000000
+_MODE_POWER_DOWN = 0b00000000
 MODE_SINGLE_MEASURE = 0b00000001
 MODE_CONTINOUS_MEASURE_1 = 0b00000010 # 8Hz
 MODE_CONTINOUS_MEASURE_2 = 0b00000110 # 100Hz
 MODE_EXTERNAL_TRIGGER_MEASURE = 0b00000100
-MODE_SELF_TEST = 0b00001000
-MODE_FUSE_ROM_ACCESS = 0b00001111
+_MODE_SELF_TEST = 0b00001000
+_MODE_FUSE_ROM_ACCESS = 0b00001111
 
 OUTPUT_14_BIT = 0b00000000
 OUTPUT_16_BIT = 0b00010000
@@ -57,6 +61,21 @@ class AK8963:
         if 0x48 != self.whoami:
             raise RuntimeError("AK8963 not found in I2C bus.")
 
+        # Sensitivity adjustement values
+        self._register_char(_CNTL1, _MODE_FUSE_ROM_ACCESS)
+        asax = self._register_char(_ASAX)
+        asay = self._register_char(_ASAY)
+        asaz = self._register_char(_ASAZ)
+        self._register_char(_CNTL1, _MODE_POWER_DOWN)
+
+        # Should wait atleast 100us before next mode
+        self._adjustement = (
+            (0.5 * (asax - 128)) / 128 + 1,
+            (0.5 * (asay - 128)) / 128 + 1,
+            (0.5 * (asaz - 128)) / 128 + 1
+        )
+
+        # Power on
         self._register_char(_CNTL1, (mode | output))
 
         if output is OUTPUT_16_BIT:
@@ -73,8 +92,16 @@ class AK8963:
 
         xyz = self._register_three_shorts(_HXL)
         self._register_char(_ST2) # Enable updating readings again
-        return tuple([value * so for value in xyz])
 
+        return (
+            xyz[0] * self._adjustement[0] * so,
+            xyz[1] * self._adjustement[1] * so,
+            xyz[2] * self._adjustement[2] * so
+        )
+
+    @property
+    def adjustement(self):
+        return self._adjustement
 
     @property
     def whoami(self):
