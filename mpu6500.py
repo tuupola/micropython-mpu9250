@@ -108,10 +108,8 @@ class MPU6500:
         so = self._accel_so
         sf = self._accel_sf
 
-        x = self._register_short(_ACCEL_XOUT_H) / so * sf
-        y = self._register_short(_ACCEL_YOUT_H) / so * sf
-        z = self._register_short(_ACCEL_ZOUT_H) / so * sf
-        return (x, y, z)
+        xyz = self._register_three_shorts(_ACCEL_XOUT_H)
+        return tuple([value / so * sf for value in xyz])
 
     @property
     def gyro(self):
@@ -121,10 +119,8 @@ class MPU6500:
         so = self._gyro_so
         sf = self._gyro_sf
 
-        x = self._register_short(_GYRO_XOUT_H) / so * sf
-        y = self._register_short(_GYRO_YOUT_H) / so * sf
-        z = self._register_short(_GYRO_ZOUT_H) / so * sf
-        return (x, y, z)
+        xyz = self._register_three_shorts(_GYRO_XOUT_H)
+        return tuple([value / so * sf for value in xyz])
 
     @property
     def whoami(self):
@@ -138,6 +134,10 @@ class MPU6500:
 
         ustruct.pack_into(">h", buf, 0, value)
         return self.i2c.writeto_mem(self.address, register, buf)
+
+    def _register_three_shorts(self, register, buf=bytearray(6)):
+        self.i2c.readfrom_mem_into(self.address, register, buf)
+        return ustruct.unpack(">hhh", buf)
 
     def _register_char(self, register, value=None, buf=bytearray(1)):
         if value is None:
