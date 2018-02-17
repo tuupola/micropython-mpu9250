@@ -24,7 +24,7 @@ while True:
     utime.sleep_ms(1000)
 ```
 
-By default the library returns 3-tuple of X, Y, Z axis values for either acceleration, gyroscope and magnetometer ie compass. Default units are m/s^2, rad/s and uT. It is possible to also get acceleration values in g and gyro values deg/s. See the example below. Note that both the MPU6500 and the AK8963 drivers are available as separate classes. MPU9250 is actually a composite of those two.
+By default the library returns 3-tuple of X, Y, Z axis values for either acceleration, gyroscope and magnetometer ie compass. Default units are `m/s^2`, `rad/s` and `uT`. It is possible to also get acceleration values in `g` and gyro values `deg/s`. See the example below. Note that both the MPU6500 and the AK8963 drivers are available as separate classes. MPU9250 is actually a composite of those two.
 
 ```python
 import utime
