@@ -71,11 +71,10 @@ class AK8963:
         """
         so = self._so
 
-        x = self._register_short(_HXL) * so
-        y = self._register_short(_HYL) * so
-        z = self._register_short(_HZL) * so
-        self._register_char(_ST2) # Enable updating readings
-        return (x, y, z)
+        xyz = self._register_three_shorts(_HXL)
+        self._register_char(_ST2) # Enable updating readings again
+        return tuple([value * so for value in xyz])
+
 
     @property
     def whoami(self):
@@ -89,6 +88,10 @@ class AK8963:
 
         ustruct.pack_into("<h", buf, 0, value)
         return self.i2c.writeto_mem(self.address, register, buf)
+
+    def _register_three_shorts(self, register, buf=bytearray(6)):
+        self.i2c.readfrom_mem_into(self.address, register, buf)
+        return ustruct.unpack("<hhh", buf)
 
     def _register_char(self, register, value=None, buf=bytearray(1)):
         if value is None:
