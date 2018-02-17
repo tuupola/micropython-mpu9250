@@ -13,11 +13,13 @@
 MicroPython I2C driver for AK8963 magnetometer
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0-dev"
 
-import ustruct # pylint: disable=import-error
-from machine import I2C, Pin # pylint: disable=import-error
-from micropython import const # pylint: disable=import-error
+# pylint: disable=import-error
+import ustruct
+from machine import I2C, Pin
+from micropython import const
+# pylint: enable=import-error
 
 _WIA = const(0x00)
 _HXL = const(0x03)
@@ -69,9 +71,9 @@ class AK8963:
         """
         so = self._so
 
-        x = self._register_word(_HXL) * so
-        y = self._register_word(_HYL) * so
-        z = self._register_word(_HZL) * so
+        x = self._register_short(_HXL) * so
+        y = self._register_short(_HYL) * so
+        z = self._register_short(_HZL) * so
         self._register_char(_ST2) # Enable updating readings
         return (x, y, z)
 
@@ -80,7 +82,7 @@ class AK8963:
         """ Value of the whoami register. """
         return self._register_char(_WIA)
 
-    def _register_word(self, register, value=None):
+    def _register_short(self, register, value=None):
         if value is None:
             data = self.i2c.readfrom_mem(self.address, register, 2)
             return ustruct.unpack("<h", data)[0]

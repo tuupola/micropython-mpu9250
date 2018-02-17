@@ -13,7 +13,7 @@
 MicroPython I2C driver for MPU6500 6-axis motion tracking device
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0-dev"
 
 # pylint: disable=import-error
 import ustruct
@@ -108,9 +108,9 @@ class MPU6500:
         so = self._accel_so
         sf = self._accel_sf
 
-        x = self._register_word(_ACCEL_XOUT_H) / so * sf
-        y = self._register_word(_ACCEL_YOUT_H) / so * sf
-        z = self._register_word(_ACCEL_ZOUT_H) / so * sf
+        x = self._register_short(_ACCEL_XOUT_H) / so * sf
+        y = self._register_short(_ACCEL_YOUT_H) / so * sf
+        z = self._register_short(_ACCEL_ZOUT_H) / so * sf
         return (x, y, z)
 
     @property
@@ -121,9 +121,9 @@ class MPU6500:
         so = self._gyro_so
         sf = self._gyro_sf
 
-        x = self._register_word(_GYRO_XOUT_H) / so * sf
-        y = self._register_word(_GYRO_YOUT_H) / so * sf
-        z = self._register_word(_GYRO_ZOUT_H) / so * sf
+        x = self._register_short(_GYRO_XOUT_H) / so * sf
+        y = self._register_short(_GYRO_YOUT_H) / so * sf
+        z = self._register_short(_GYRO_ZOUT_H) / so * sf
         return (x, y, z)
 
     @property
@@ -131,7 +131,7 @@ class MPU6500:
         """ Value of the whoami register. """
         return self._register_char(_WHO_AM_I)
 
-    def _register_word(self, register, value=None):
+    def _register_short(self, register, value=None):
         if value is None:
             data = self.i2c.readfrom_mem(self.address, register, 2)
             return ustruct.unpack(">h", data)[0]
