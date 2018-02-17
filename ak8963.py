@@ -82,18 +82,21 @@ class AK8963:
         """ Value of the whoami register. """
         return self._register_char(_WIA)
 
-    def _register_short(self, register, value=None):
+    def _register_short(self, register, value=None, buf=bytearray(2)):
         if value is None:
-            data = self.i2c.readfrom_mem(self.address, register, 2)
-            return ustruct.unpack("<h", data)[0]
-        data = ustruct.pack("<h", value)
-        return self.i2c.writeto_mem(self.address, register, data)
+            self.i2c.readfrom_mem_into(self.address, register, buf)
+            return ustruct.unpack("<h", buf)[0]
 
-    def _register_char(self, register, value=None):
+        ustruct.pack_into("<h", buf, 0, value)
+        return self.i2c.writeto_mem(self.address, register, buf)
+
+    def _register_char(self, register, value=None, buf=bytearray(1)):
         if value is None:
-            return self.i2c.readfrom_mem(self.address, register, 1)[0]
-        data = ustruct.pack("<b", value)
-        return self.i2c.writeto_mem(self.address, register, data)
+            self.i2c.readfrom_mem_into(self.address, register, buf)
+            return buf[0]
+
+        ustruct.pack_into("<b", buf, 0, value)
+        return self.i2c.writeto_mem(self.address, register, buf)
 
     def __enter__(self):
         return self

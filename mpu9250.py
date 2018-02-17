@@ -19,7 +19,7 @@ from mpu6500 import MPU6500
 from ak8963 import AK8963
 # pylint: enable=import-error
 
-__version__ = "0.1.0"
+__version__ = "0.2.0-dev"
 
 class MPU9250:
     """Class which provides interface to MPU9250 9-axis motion tracking device."""
