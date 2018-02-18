@@ -53,10 +53,13 @@ class AK8963:
     """Class which provides interface to AK8963 magnetometer."""
     def __init__(
         self, i2c, address=0x0c,
-        mode=MODE_CONTINOUS_MEASURE_1, output=OUTPUT_16_BIT
+        mode=MODE_CONTINOUS_MEASURE_1, output=OUTPUT_16_BIT,
+        offset=(0, 0, 0), scale=(1, 1, 1)
     ):
         self.i2c = i2c
         self.address = address
+        self._offset = offset
+        self._scale = scale
 
         if 0x48 != self.whoami:
             raise RuntimeError("AK8963 not found in I2C bus.")
@@ -88,16 +91,31 @@ class AK8963:
         """
         X, Y, Z axis micro-Tesla (uT) as floats.
         """
-        so = self._so
-
-        xyz = self._register_three_shorts(_HXL)
+        xyz = list(self._register_three_shorts(_HXL))
         self._register_char(_ST2) # Enable updating readings again
 
-        return (
-            xyz[0] * self._adjustement[0] * so,
-            xyz[1] * self._adjustement[1] * so,
-            xyz[2] * self._adjustement[2] * so
-        )
+        # Apply factory axial sensitivy adjustements
+        xyz[0] *= self._adjustement[0]
+        xyz[1] *= self._adjustement[1]
+        xyz[2] *= self._adjustement[2]
+
+        # Apply output scale determined in constructor
+        so = self._so
+        xyz[0] *= so
+        xyz[1] *= so
+        xyz[2] *= so
+
+        # Apply hard iron ie. offset bias from calibration
+        xyz[0] -= self._offset[0]
+        xyz[1] -= self._offset[1]
+        xyz[2] -= self._offset[2]
+
+        # Apply soft iron ie. scale bias from calibration
+        xyz[0] *= self._scale[0]
+        xyz[1] *= self._scale[1]
+        xyz[2] *= self._scale[2]
+
+        return tuple(xyz)
 
     @property
     def adjustement(self):
