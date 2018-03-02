@@ -18,6 +18,7 @@ __version__ = "0.2.0-dev"
 
 # pylint: disable=import-error
 import ustruct
+import utime
 from machine import I2C, Pin
 from micropython import const
 # pylint: enable=import-error
@@ -125,6 +126,48 @@ class AK8963:
     def whoami(self):
         """ Value of the whoami register. """
         return self._register_char(_WIA)
+
+    def calibrate(self, count=256, delay=200):
+        self._offset = (0, 0, 0)
+        self._scale = (1, 1, 1)
+
+        reading = self.magnetic
+        minx = maxx = reading[0]
+        miny = maxy = reading[1]
+        minz = maxz = reading[2]
+
+        while count:
+            utime.sleep_ms(delay)
+            reading = self.magnetic
+            minx = min(minx, reading[0])
+            maxx = max(maxx, reading[0])
+            miny = min(miny, reading[1])
+            maxy = max(maxy, reading[1])
+            minz = min(minz, reading[2])
+            maxz = max(maxz, reading[2])
+            count -= 1
+
+        # Hard iron correction
+        offset_x = (maxx + minx) / 2
+        offset_y = (maxy + miny) / 2
+        offset_z = (maxz + minz) / 2
+
+        self._offset = (offset_x, offset_y, offset_z)
+
+        # Soft iron correction
+        avg_delta_x = (maxx - minx) / 2
+        avg_delta_y = (maxy - miny) / 2
+        avg_delta_z = (maxz - minz) / 2
+
+        avg_delta = (avg_delta_x - avg_delta_y + avg_delta_z) / 3
+
+        scale_x = avg_delta / avg_delta_x
+        scale_y = avg_delta / avg_delta_y
+        scale_z = avg_delta / avg_delta_z
+
+        self._scale = (scale_x, scale_y, scale_z)
+
+        return self._offset, self._scale
 
     def _register_short(self, register, value=None, buf=bytearray(2)):
         if value is None:

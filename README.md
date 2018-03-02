@@ -71,10 +71,26 @@ timer_0.init(period=1000, mode=Timer.PERIODIC, callback=read_sensor)
 
 ## Magnetometer Calibration
 
-For real life applications you should almost always [calibrate the magnetometer](https://appelsiini.net/2018/calibrate-magnetometer/). The AK8963 driver supports both hard and soft iron calibration. It does not yet support programmatic calibration, instead you have to pass the hard iron offset and soft iron scale values in the constructor.
+For real life applications you should almost always [calibrate the magnetometer](https://appelsiini.net/2018/calibrate-magnetometer/). The AK8963 driver supports both hard and soft iron correction. Calibration function takes two parameters: `count` is the number of samples to collect and `delay` is the delay in millisecods between the samples.
+
+With the default values of `256` and `200` calibration takes aproximately one minute. While calibration function is running the sensor should be rotated multiple times around each axis.
 
 ```python
-import utime
+from machine import I2C, Pin
+from mpu9250 import MPU9250
+from ak8963 import AK8963
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+
+ak8963 = AK8963(i2c)
+offset, scale = ak8963.calibrate(count=256, delay=200)
+
+sensor = MPU9250(i2c, ak8963=ak8963)
+```
+
+After finishing calibration the `calibrate()` method also returns tuples for both hard iron `offset` and soft iron `scale`. To avoid calibrating after each startup it would make sense to strore these values in NVRAM or config file and pass them to the AK8963 constructor. Below example only illustrates how to use the constructor.
+
+```python
 from machine import I2C, Pin
 from mpu9250 import MPU9250
 from ak8963 import AK8963
@@ -86,14 +102,8 @@ ak8963 = AK8963(
     scale=(1.18437220840483, 0.923895823933424, 0.931707933618979)
 )
 sensor = MPU9250(i2c, ak8963=ak8963)
-
-while True:
-    print(sensor.acceleration)
-    print(sensor.gyro)
-    print(sensor.magnetic)
-
-    utime.sleep_ms(1000)
 ```
+
 
 ## License
 
