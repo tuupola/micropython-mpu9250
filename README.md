@@ -69,6 +69,32 @@ timer_0 = Timer(0)
 timer_0.init(period=1000, mode=Timer.PERIODIC, callback=read_sensor)
 ```
 
+## Magnetometer Calibration
+
+For real life applications you should almost always [calibrate the magnetometer](https://appelsiini.net/2018/calibrate-magnetometer/). The AK8963 driver supports both hard and soft iron calibration. It does not yet support programmatic calibration, instead you have to pass the hard iron offset and soft iron scale values in the constructor.
+
+```python
+import utime
+from machine import I2C, Pin
+from mpu9250 import MPU9250
+from ak8963 import AK8963
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+ak8963 = AK8963(
+    i2c,
+    offset=(-136.8931640625, -160.482421875, 59.02880859375),
+    scale=(1.18437220840483, 0.923895823933424, 0.931707933618979)
+)
+sensor = MPU9250(i2c, ak8963=ak8963)
+
+while True:
+    print(sensor.acceleration)
+    print(sensor.gyro)
+    print(sensor.magnetic)
+
+    utime.sleep_ms(1000)
+```
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
