@@ -159,7 +159,7 @@ class AK8963:
         avg_delta_y = (maxy - miny) / 2
         avg_delta_z = (maxz - minz) / 2
 
-        avg_delta = (avg_delta_x - avg_delta_y + avg_delta_z) / 3
+        avg_delta = (avg_delta_x + avg_delta_y + avg_delta_z) / 3
 
         scale_x = avg_delta / avg_delta_x
         scale_y = avg_delta / avg_delta_y
