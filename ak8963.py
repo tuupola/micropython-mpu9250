@@ -14,7 +14,7 @@
 MicroPython I2C driver for AK8963 magnetometer
 """
 
-__version__ = "0.2.0-dev"
+__version__ = "0.2.0"
 
 # pylint: disable=import-error
 import ustruct
