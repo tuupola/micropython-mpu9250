@@ -82,7 +82,7 @@ _I2C_BYPASS_DIS = const(0b00000000)
 SF_G = 1
 SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
-SF_RAD_S = 57.295779578552 # 1 rad/s is 57.295779578552 deg/s
+SF_RAD_S = 0.017453292519943 # 1 deg/s is 0.017453292519943 rad/s
 
 class MPU6500:
     """Class which provides interface to MPU6500 6-axis motion tracking device."""
