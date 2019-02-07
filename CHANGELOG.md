@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 0.2.1 - unreleased
+## [0.2.1](https://github.com/tuupola/micropython-mpu9250/compare/0.2.0...0.2.1) - 2019-02-07
 ### Fixed
 - Gyro degrees to radians conversion ([#8](https://github.com/tuupola/micropython-mpu9250/pull/8)).
 
-## 0.2.0 - 2018-04-08
+## [0.2.0](https://github.com/tuupola/micropython-mpu9250/compare/0.1.0...0.2.0)- 2018-04-08
 ### Added
 - Support for magnetometer factory sensitivity adjustement values `ASAX`, `ASAY` and `ASAZ`.
 - Support for setting magnetometer offset and scale calibration values.

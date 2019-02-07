@@ -24,7 +24,7 @@
 MicroPython I2C driver for MPU6500 6-axis motion tracking device
 """
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 # pylint: disable=import-error
 import ustruct
