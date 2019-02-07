@@ -107,4 +107,4 @@ sensor = MPU9250(i2c, ak8963=ak8963)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE.txt) for more information.
