@@ -25,7 +25,7 @@ setup(
     maintainer_email="tuupola@appelsiini.net",
     license="MIT",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
         "Programming Language :: Python :: Implementation :: MicroPython",
         "License :: OSI Approved :: MIT License",
     ],
