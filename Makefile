@@ -28,7 +28,6 @@ reset:
 
 dist:
 	python3 setup.py sdist
-
-# twine upload dist/filename.tar.gz
+	# twine upload dist/filename.tar.gz
 
 .PHONY: help watch shell repl reset sync dist
