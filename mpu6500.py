@@ -161,6 +161,7 @@ class MPU6500:
 
     def calibrate(self, count=256, delay=0):
         ox, oy, oz = (0.0, 0.0, 0.0)
+        self._gyro_offset = (0.0, 0.0, 0.0)
         n = float(count)
 
         while count:
