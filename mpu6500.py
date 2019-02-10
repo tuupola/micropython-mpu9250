@@ -24,7 +24,7 @@
 MicroPython I2C driver for MPU6500 6-axis motion tracking device
 """
 
-__version__ = "0.2.1"
+__version__ = "0.3.0-dev"
 
 # pylint: disable=import-error
 import ustruct
@@ -73,6 +73,9 @@ _GYRO_SO_250DPS = 131
 _GYRO_SO_500DPS = 62.5
 _GYRO_SO_1000DPS = 32.8
 _GYRO_SO_2000DPS = 16.4
+
+_TEMP_SO = 333.87
+_TEMP_OFFSET = 21
 
 # Used for enablind and disabling the i2c bypass access
 _I2C_BYPASS_MASK = const(0b00000010)
@@ -132,6 +135,14 @@ class MPU6500:
 
         xyz = self._register_three_shorts(_GYRO_XOUT_H)
         return tuple([value / so * sf for value in xyz])
+
+    @property
+    def temperature(self):
+        """
+        Die temperature in celcius as a float.
+        """
+        temp = self._register_short(_TEMP_OUT_H)
+        return ((temp - _TEMP_OFFSET) / _TEMP_SO) + _TEMP_OFFSET
 
     @property
     def whoami(self):
