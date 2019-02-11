@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [0.3.0](https://github.com/tuupola/micropython-mpu9250/compare/0.2.1...master) - unreleased
+### Added
+
+- Support for internal temperature sensor ([#1](https://github.com/tuupola/micropython-mpu9250/issues/1), [#9](https://github.com/tuupola/micropython-mpu9250/pull/9))
+- Support for gyro calibration ([#5](https://github.com/tuupola/micropython-mpu9250/issues/5), [#10](https://github.com/tuupola/micropython-mpu9250/pull/10))
+
 ## [0.2.1](https://github.com/tuupola/micropython-mpu9250/compare/0.2.0...0.2.1) - 2019-02-07
 ### Fixed
 - Gyro degrees to radians conversion ([#8](https://github.com/tuupola/micropython-mpu9250/pull/8)).
