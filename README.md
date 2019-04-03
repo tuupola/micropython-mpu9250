@@ -104,6 +104,40 @@ ak8963 = AK8963(
 sensor = MPU9250(i2c, ak8963=ak8963)
 ```
 
+## Gyro Calibration
+
+For real life applications you should almost always [calibrate the magnetometer](https://appelsiini.net/2018/calibrate-magnetometer/). The MPU6500 driver supports both hard and soft iron correction. Calibration function takes two parameters: `count` is the number of samples to collect and `delay` is the delay in millisecods between the samples.
+
+With the default values of `256` and `200` calibration takes aproximately one minute. While calibration function is running the sensor should be rotated multiple times around each axis.
+
+```python
+from machine import I2C, Pin
+from mpu6500 import MPU6500
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+
+mpu6500 = MPU6500(i2c)
+offset = mpu6500.calibrate(count=256, delay=0)
+
+sensor = MPU9250(i2c, mpu6500=mpu6500)
+```
+
+After finishing calibration the `calibrate()` method also returns tuples for both hard iron `offset` and soft iron `scale`. To avoid calibrating after each startup it would make sense to strore these values in NVRAM or config file and pass them to the AK8963 constructor. Below example only illustrates how to use the constructor.
+
+```python
+from machine import I2C, Pin
+from mpu9250 import MPU9250
+from ak8963 import AK8963
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+ak8963 = AK8963(
+    i2c,
+    offset=(-136.8931640625, -160.482421875, 59.02880859375),
+    scale=(1.18437220840483, 0.923895823933424, 0.931707933618979)
+)
+sensor = MPU9250(i2c, ak8963=ak8963)
+```
+
 
 ## License
 
