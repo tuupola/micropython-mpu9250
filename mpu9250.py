@@ -64,6 +64,13 @@ class MPU9250:
         return self.mpu6500.gyro
 
     @property
+    def temperature(self):
+        """
+        Die temperature in celcius as a float.
+        """
+        return self.mpu6500.temperature
+
+    @property
     def magnetic(self):
         """
         X, Y, Z axis micro-Tesla (uT) as floats.
