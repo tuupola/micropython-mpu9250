@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file, in reverse 
 - Support for internal temperature sensor ([#1](https://github.com/tuupola/micropython-mpu9250/issues/1), [#9](https://github.com/tuupola/micropython-mpu9250/pull/9))
 - Support for gyro calibration ([#5](https://github.com/tuupola/micropython-mpu9250/issues/5), [#10](https://github.com/tuupola/micropython-mpu9250/pull/10))
 
+
+### Fixed
+- Support for standalone MPU6500 sensors ([#15](https://github.com/tuupola/micropython-mpu9250/issues/15), [#16](https://github.com/tuupola/micropython-mpu9250/pull/16))
+
 ## [0.2.1](https://github.com/tuupola/micropython-mpu9250/compare/0.2.0...0.2.1) - 2019-02-07
 ### Fixed
 - Gyro degrees to radians conversion ([#8](https://github.com/tuupola/micropython-mpu9250/pull/8)).
