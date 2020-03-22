@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 Mika Tuupola
+# Copyright (c) 2018-2020 Mika Tuupola
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of  this software and associated documentation files (the "Software"), to
@@ -24,7 +24,7 @@
 MicroPython I2C driver for MPU6500 6-axis motion tracking device
 """
 
-__version__ = "0.3.0-dev"
+__version__ = "0.3.0"
 
 # pylint: disable=import-error
 import ustruct

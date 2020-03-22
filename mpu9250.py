@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 Mika Tuupola
+# Copyright (c) 2018-2020 Mika Tuupola
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of  this software and associated documentation files (the "Software"), to
@@ -30,7 +30,7 @@ from mpu6500 import MPU6500
 from ak8963 import AK8963
 # pylint: enable=import-error
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 # Used for enabling and disabling the I2C bypass access
 _INT_PIN_CFG = const(0x37)

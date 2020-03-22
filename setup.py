@@ -13,7 +13,7 @@ with open(path.join(cwd, "README.md"), encoding="utf-8") as f:
 setup(
     name="micropython-mpu9250",
     py_modules=["mpu9250", "mpu6500", "ak8963"],
-    version="0.2.1",
+    version="0.3.0",
     description="MicroPython I2C driver for MPU9250 9-axis motion tracking device",
     long_description=long_description,
     long_description_content_type="text/markdown",
