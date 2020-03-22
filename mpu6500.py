@@ -36,7 +36,6 @@ from micropython import const
 _GYRO_CONFIG = const(0x1b)
 _ACCEL_CONFIG = const(0x1c)
 _ACCEL_CONFIG2 = const(0x1d)
-_INT_PIN_CFG = const(0x37)
 _ACCEL_XOUT_H = const(0x3b)
 _ACCEL_XOUT_L = const(0x3c)
 _ACCEL_YOUT_H = const(0x3d)
@@ -78,11 +77,6 @@ _GYRO_SO_2000DPS = 16.4
 _TEMP_SO = 333.87
 _TEMP_OFFSET = 21
 
-# Used for enablind and disabling the i2c bypass access
-_I2C_BYPASS_MASK = const(0b00000010)
-_I2C_BYPASS_EN = const(0b00000010)
-_I2C_BYPASS_DIS = const(0b00000000)
-
 SF_G = 1
 SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
@@ -108,12 +102,6 @@ class MPU6500:
         self._accel_sf = accel_sf
         self._gyro_sf = gyro_sf
         self._gyro_offset = gyro_offset
-
-        # Enable I2C bypass to access for MPU9250 magnetometer access.
-        char = self._register_char(_INT_PIN_CFG)
-        char &= ~_I2C_BYPASS_MASK # clear I2C bits
-        char |= _I2C_BYPASS_EN
-        self._register_char(_INT_PIN_CFG, char)
 
     @property
     def acceleration(self):
