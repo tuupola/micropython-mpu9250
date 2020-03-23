@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.3.0](https://github.com/tuupola/micropython-mpu9250/compare/0.2.1...0.3.0) - unreleased
+## [0.3.0](https://github.com/tuupola/micropython-mpu9250/compare/0.2.1...0.3.0) - 2020-03-22
 ### Added
 
 - Support for internal temperature sensor ([#1](https://github.com/tuupola/micropython-mpu9250/issues/1), [#9](https://github.com/tuupola/micropython-mpu9250/pull/9), [#18](https://github.com/tuupola/micropython-mpu9250/pull/18))
