@@ -25,7 +25,7 @@
 MicroPython I2C driver for AK8963 magnetometer
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0-dev"
 
 # pylint: disable=import-error
 import ustruct
@@ -62,7 +62,9 @@ _SO_14BIT = 0.6 # μT per digit when 14bit mode
 _SO_16BIT = 0.15 # μT per digit when 16bit mode
 
 class AK8963:
-    """Class which provides interface to AK8963 magnetometer."""
+    """
+    Class which provides an interface to a AK8963 magnetometer.
+    """
     def __init__(
         self, i2c, address=0x0c,
         mode=MODE_CONTINOUS_MEASURE_1, output=OUTPUT_16_BIT,
@@ -135,10 +137,15 @@ class AK8963:
 
     @property
     def whoami(self):
-        """ Value of the whoami register. """
+        """
+        Value of the whoami register.
+        """
         return self._register_char(_WIA)
 
     def calibrate(self, count=256, delay=200):
+        """
+        Calibrate the magnetometer.
+        """
         self._offset = (0, 0, 0)
         self._scale = (1, 1, 1)
 

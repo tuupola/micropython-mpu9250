@@ -94,7 +94,7 @@ offset, scale = ak8963.calibrate(count=256, delay=200)
 sensor = MPU9250(i2c, ak8963=ak8963)
 ```
 
-After finishing calibration the `calibrate()` method also returns tuples for both hard iron `offset` and soft iron `scale`. To avoid calibrating after each startup it would make sense to strore these values in NVRAM or config file and pass them to the AK8963 constructor. Below example only illustrates how to use the constructor.
+After finishing the `calibrate()` method also returns tuples for both hard iron `offset` and soft iron `scale`. To avoid calibrating after each startup it would make sense to strore these values in NVRAM or config file and pass them to the AK8963 constructor. Below example only illustrates how to use the constructor.
 
 ```python
 from machine import I2C, Pin
@@ -115,7 +115,35 @@ sensor = MPU9250(i2c, ak8963=ak8963)
 
 ## Gyro Calibration
 
-TODO
+You can also calibrate the gyro. Calibration does not remove noise. It helps with gyro drift by offsetting the signal close to zero on all axises.
+
+
+The calibration function takes two parameters: `count` is the number of samples to collect and `delay` is the delay in millisecods between the samples. With the default values of `256` and `0` calibration takes only a second. While calibration function is running the sensor should be perfectly stable. Do not touch or move it.
+
+```python
+from machine import I2C, Pin
+from mpu6500 import MPU6500
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+
+mpu6500 = MPU6500(i2c)
+offset = mpu6500.calibrate(count=256, delay=0)
+
+sensor = MPU9250(i2c, mpu6500=mpu6500)
+```
+
+After finishing the `calibrate()` method also returns a tuple for `offset`. Like before you could store this value somewhere and pass it to the MPU6500 constructor in the future. Below example only illustrates how to use the constructor.
+
+
+```python
+from machine import I2C, Pin
+from mpu6500 import MPU6500
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+
+mpu6500 = MPU6500(i2c, offset=(0.1139419, -0.08501822, -0.2589432))
+sensor = MPU9250(i2c, mpu6500=mpu6500)
+```
 
 ## License
 
