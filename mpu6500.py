@@ -83,7 +83,9 @@ SF_DEG_S = 1
 SF_RAD_S = 0.017453292519943 # 1 deg/s is 0.017453292519943 rad/s
 
 class MPU6500:
-    """Class which provides interface to MPU6500 6-axis motion tracking device."""
+    """
+    Class which provides an interface to an MPU6500 6-axis motion tracking device.
+    """
     def __init__(
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
@@ -145,10 +147,15 @@ class MPU6500:
 
     @property
     def whoami(self):
-        """ Value of the whoami register. """
+        """
+        Value of the whoami register.
+        """
         return self._register_char(_WHO_AM_I)
 
     def calibrate(self, count=256, delay=0):
+        """
+        Calibrate the gyro.
+        """
         ox, oy, oz = (0.0, 0.0, 0.0)
         self._gyro_offset = (0.0, 0.0, 0.0)
         n = float(count)

@@ -39,7 +39,9 @@ _I2C_BYPASS_EN = const(0b00000010)
 _I2C_BYPASS_DIS = const(0b00000000)
 
 class MPU9250:
-    """Class which provides interface to MPU9250 9-axis motion tracking device."""
+    """
+    Class which provides an interface to an MPU9250 9-axis motion tracking device.
+    """
     def __init__(self, i2c, mpu6500 = None, ak8963 = None):
         if mpu6500 is None:
             self.mpu6500 = MPU6500(i2c)
