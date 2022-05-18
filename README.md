@@ -74,7 +74,7 @@ timer_0.init(period=1000, mode=Timer.PERIODIC, callback=read_sensor)
 
 ## Magnetometer Calibration
 
-For real life applications you should almost always [calibrate the magnetometer](https://appelsiini.net/2018/calibrate-magnetometer/). The AK8963 driver supports both hard and soft iron correction. Calibration function takes two parameters: `count` is the number of samples to collect and `delay` is the delay in millisecods between the samples.
+For real life applications you should almost always [calibrate the magnetometer](https://www.appelsiini.net/2018/calibrate-magnetometer/). The AK8963 driver supports both hard and soft iron correction. Calibration function takes two parameters: `count` is the number of samples to collect and `delay` is the delay in millisecods between the samples.
 
 With the default values of `256` and `200` calibration takes aproximately one minute. While calibration function is running the sensor should be rotated multiple times around each axis.
 
