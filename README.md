@@ -4,7 +4,7 @@ MPU-9250 is a System in Package (SiP) which combines two chips: MPU-6500 which c
 
 ## Usage
 
-Simple test with never ending loop.
+Kevin Wheeler has an [extensive video](https://www.youtube.com/watch?v=ph10GSO8pDk) describing how to use this library. The short code snippets in this README should also help you to get started. First is simple example with never ending loop.
 
 ```python
 import utime
