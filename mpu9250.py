@@ -30,7 +30,7 @@ from mpu6500 import MPU6500
 from ak8963 import AK8963
 # pylint: enable=import-error
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 # Used for enabling and disabling the I2C bypass access
 _INT_PIN_CFG = const(0x37)

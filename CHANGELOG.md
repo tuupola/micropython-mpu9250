@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.4.0](https://github.com/tuupola/micropython-mpu9250/compare/0.3.0...master) - unreleased
+## [0.4.0](https://github.com/tuupola/micropython-mpu9250/compare/0.3.0...0.4.0) - 2023-12-01
 ### Added
 - Support for MPU6700 sensors ([#28](https://github.com/tuupola/micropython-mpu9250/pull/28))
 
