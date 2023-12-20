@@ -90,7 +90,7 @@ class MPU6500:
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
         accel_sf=SF_M_S2, gyro_sf=SF_RAD_S,
-        gyro_offset=(0, 0, 0)
+        gyro_offset=(0, 0, 0), accel_offset=(0, 0, 0)
     ):
         self.i2c = i2c
         self.address = address
@@ -110,6 +110,7 @@ class MPU6500:
         self._accel_sf = accel_sf
         self._gyro_sf = gyro_sf
         self._gyro_offset = gyro_offset
+        self._accel_offset = accel_offset
 
     @property
     def acceleration(self):
@@ -121,9 +122,15 @@ class MPU6500:
         """
         so = self._accel_so
         sf = self._accel_sf
+        ox, oy, oz = self._accel_offset
 
         xyz = self._register_three_shorts(_ACCEL_XOUT_H)
-        return tuple([value / so * sf for value in xyz])
+        xyz = [value / so * sf for value in xyz]
+        xyz[0] -= ox
+        xyz[1] -= oy
+        xyz[2] -= oz
+
+        return tuple(xyz)
 
     @property
     def gyro(self):
@@ -136,7 +143,6 @@ class MPU6500:
 
         xyz = self._register_three_shorts(_GYRO_XOUT_H)
         xyz = [value / so * sf for value in xyz]
-
         xyz[0] -= ox
         xyz[1] -= oy
         xyz[2] -= oz
@@ -157,20 +163,47 @@ class MPU6500:
         return self._register_char(_WHO_AM_I)
 
     def calibrate(self, count=256, delay=0):
-        ox, oy, oz = (0.0, 0.0, 0.0)
+        gox, goy, goz = (0.0, 0.0, 0.0)
+        aox, aoy, aoz = (0.0, 0.0, 0.0)
         self._gyro_offset = (0.0, 0.0, 0.0)
+        self._accel_offset = (0.0, 0.0, 0.0)
         n = float(count)
 
         while count:
             utime.sleep_ms(delay)
+
             gx, gy, gz = self.gyro
-            ox += gx
-            oy += gy
-            oz += gz
+            gox += gx
+            goy += gy
+            goz += gz
+
+            ax, ay, az = self.acceleration
+            aox += ax
+            aoy += ay
+            aoz += az
+
             count -= 1
 
-        self._gyro_offset = (ox / n, oy / n, oz / n)
-        return self._gyro_offset
+        aox /= n
+        aoy /= n
+        aoz /= n
+
+        if ((self._accel_sf - abs(aox)) < 1):
+            sign = (1, -1)[aox < 0]
+            aox = (self._accel_sf - abs(aox)) * sign
+
+        if ((self._accel_sf - abs(aoy)) < 1):
+            sign = (1, -1)[aoy < 0]
+            aoy = (self._accel_sf - abs(aoy)) * sign
+
+        if ((self._accel_sf - abs(aoz)) < 1):
+            sign = (1, -1)[aoz < 0]
+            aoz = (self._accel_sf - abs(aoz)) * sign
+
+        self._gyro_offset = (gox / n, goy / n, goz / n)
+        self._accel_offset = (aox, aoy, aoz)
+
+        return self._gyro_offset, self._accel_offset
 
     def _register_short(self, register, value=None, buf=bytearray(2)):
         if value is None:
