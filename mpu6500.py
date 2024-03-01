@@ -90,14 +90,18 @@ class MPU6500:
         self, i2c, address=0x68,
         accel_fs=ACCEL_FS_SEL_2G, gyro_fs=GYRO_FS_SEL_250DPS,
         accel_sf=SF_M_S2, gyro_sf=SF_RAD_S,
-        gyro_offset=(0, 0, 0)
+        gyro_offset=(0, 0, 0),
+        whoami_response = 0x70
     ):
         self.i2c = i2c
         self.address = address
+        self._wh_res = whoami_response
 
         # 0x70 = standalone MPU6500, 0x71 = MPU6250 SIP, 0x90 = MPU6700
-        if self.whoami not in [0x71, 0x70, 0x90]:
-            raise RuntimeError("MPU6500 not found in I2C bus.")
+        if self._wh_res != self.whoami \
+            and self.whoami not in [0x71, 0x70, 0x90]:
+            raise RuntimeError(f'''MPU6500 not found in I2C bus.
+                               Try changing the whoami_response to {hex(self.whoami)}''')
 
         # Reset, disable sleep mode
         self._register_char(_PWR_MGMT_1, 0x80)
